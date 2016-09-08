@@ -9,10 +9,17 @@ public class GeneratePlane : MonoBehaviour
     private Mesh mesh;
     private Vector3[] vertices;
     public corners _corners;
-    
+
+    private int i;
 
     private void Awake()
     {
+        GeneratePlanesList.generatedPlanes.Add(gameObject);
+        foreach(GameObject G in GeneratePlanesList.generatedPlanes)
+        {
+            //i++;
+            //print(G + " " + i);
+        }
         _corners = new corners();
         xSize = Random.Range(5, 15);
         ySize = Random.Range(5, 15);
@@ -56,18 +63,18 @@ public class GeneratePlane : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawSphere(_corners.downLeftCorner + transform.position, 0.4f);
-        Gizmos.DrawSphere(_corners.upperRightCorner + transform.position, 0.4f);
-        Gizmos.DrawSphere(_corners.downRightCorner + transform.position, 0.4f);
-        Gizmos.DrawSphere(_corners.upperLeftCorner + transform.position, 0.4f);
+        Gizmos.DrawSphere(new Vector3(_corners.downLeftCorner.x,_corners.downLeftCorner.y, 0) + transform.position, 0.4f);
+        Gizmos.DrawSphere(new Vector3(_corners.upperRightCorner.x, _corners.upperRightCorner.y, 0) + transform.position, 0.4f);
+        Gizmos.DrawSphere(new Vector3(_corners.downRightCorner.x, _corners.downRightCorner.y, 0) + transform.position, 0.4f);
+        Gizmos.DrawSphere(new Vector3(_corners.upperLeftCorner.x, _corners.upperLeftCorner.y, 0) + transform.position, 0.4f);
     }
 
     public struct corners
     {
-        public Vector3 downLeftCorner;
-        public Vector3 downRightCorner;
-        public Vector3 upperLeftCorner;
-        public Vector3 upperRightCorner;
+        public Vector2 downLeftCorner;
+        public Vector2 downRightCorner;
+        public Vector2 upperLeftCorner;
+        public Vector2 upperRightCorner;
     }
     
 }
