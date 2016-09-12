@@ -12,6 +12,8 @@ public class ChamberCreator : MonoBehaviour {
     [SerializeField]
     private Material chamberMaterial;
 
+    private bool isAlone;
+
     public List<GameObject> spawnedChambers = new List<GameObject>();
 
     // Use this for initialization
@@ -23,32 +25,76 @@ public class ChamberCreator : MonoBehaviour {
     {
         for (int i = 0; i < spawnChambersStartAmmount; i++)
         {
-            GameObject go = new GameObject("chamber");
+            isAlone = false;
+            GameObject go = new GameObject("chamber"+spawnedChambers.Count);
+            go.transform.position = new Vector3(Random.Range(1, xSizeLimit), Random.Range(1, ySizeLimit), 0);
             go.AddComponent<GeneratePlane>();
             Renderer renderer = go.GetComponent<Renderer>();
             renderer.material = chamberMaterial;
-            go.AddComponent<BoxCollider2D>();
-            go.transform.position = new Vector3(Random.Range(1, xSizeLimit), Random.Range(1, ySizeLimit), 0);
-            CheckForCollisionWithOtherChamber(go);
+            //go.AddComponent<BoxCollider2D>();
+            while (!isAlone)
+            {
+                CheckForCollisionWithOtherChamber(go);
+            }
             spawnedChambers.Add(go);
-            
         }
     }
 
     void CheckForCollisionWithOtherChamber(GameObject obj)
     {
         GeneratePlane ownCorners = obj.GetComponent<GeneratePlane>();
-        Rect rect = new Rect(new Vector2(obj.transform.position.x, obj.transform.position.y+ownCorners.ySize), new Vector2((ownCorners._corners.downRightCorner.x - ownCorners._corners.downLeftCorner.x),(ownCorners._corners.upperRightCorner.y - ownCorners._corners.downRightCorner.y)));
-        foreach(GameObject G in spawnedChambers)
+        //Rect rect = new Rect(new Vector2(obj.transform.position.x, obj.transform.position.y+ownCorners.ySize), new Vector2((ownCorners._corners.downRightCorner.x - ownCorners._corners.downLeftCorner.x),(ownCorners._corners.upperRightCorner.y - ownCorners._corners.downRightCorner.y)));
+        if (spawnedChambers.Count > 0)
         {
-            //print("moved1");
-            GeneratePlane cornerInf = G.GetComponent<GeneratePlane>();
-            //print((rect.Contains(cornerInf._corners.downLeftCorner) || rect.Contains(cornerInf._corners.downRightCorner) || rect.Contains(cornerInf._corners.upperLeftCorner) || rect.Contains(cornerInf._corners.upperRightCorner)));
-            if (rect.Contains(cornerInf._corners.downLeftCorner) || rect.Contains(cornerInf._corners.downRightCorner) || rect.Contains(cornerInf._corners.upperLeftCorner) || rect.Contains(cornerInf._corners.upperRightCorner))
+            foreach (GameObject G in spawnedChambers)
             {
-                obj.transform.position = G.transform.position - new Vector3(ownCorners.xSize, ownCorners.ySize, 0);
-                //print("moved");
+                //print("moved1");
+                GeneratePlane cornerInf = G.GetComponent<GeneratePlane>();
+
+                /*
+                print((G.transform.position.x + cornerInf.xSize > obj.transform.position.x &&
+                     G.transform.position.x < obj.transform.position.x + ownCorners.xSize &&
+                     G.transform.position.y + cornerInf.xSize < obj.transform.position.y &&
+                     G.transform.position.y < obj.transform.position.y + ownCorners.ySize));
+                if (G.transform.position.x + cornerInf.xSize > obj.transform.position.x  &&
+                     G.transform.position.x < obj.transform.position.x + ownCorners.xSize &&
+                     G.transform.position.y + cornerInf.xSize < obj.transform.position.y  &&
+                     G.transform.position.y < obj.transform.position.y + ownCorners.ySize)
+                {
+
+                    obj.transform.position = G.transform.position - new Vector3(ownCorners.xSize, 0, 0);
+
+                }
+                else
+                {
+                    isAlone = true;
+                }*/
+
+                //print(cornerInf._corners.downLeftCorner + "down left");
+                //print(cornerInf._corners.downRightCorner + "down right");
+                //print(cornerInf._corners.upperLeftCorner + "upper left");
+                //print(cornerInf._corners.upperRightCorner + "upper right");
+                //print((ownCorners.checkCollisions(cornerInf._corners.downLeftCorner) || ownCorners.checkCollisions(cornerInf._corners.downRightCorner) || ownCorners.checkCollisions(cornerInf._corners.upperLeftCorner) || ownCorners.checkCollisions(cornerInf._corners.upperRightCorner))+ " " + obj.name);
+                if (ownCorners.checkCollisions(cornerInf._corners.downLeftCorner) || 
+                    ownCorners.checkCollisions(cornerInf._corners.downRightCorner) || 
+                    ownCorners.checkCollisions(cornerInf._corners.upperLeftCorner) || 
+                    ownCorners.checkCollisions(cornerInf._corners.upperRightCorner))
+                {
+                    obj.transform.position = G.transform.position - new Vector3(ownCorners.xSize+1, 0, 0);
+                    //obj.transform.position = new Vector3(200, 300, 300);
+                    print("moved"+ obj.name);
+                    print(isAlone);
+                    //isAlone = true;
+                }
+                else
+                {
+                    isAlone = true;
+                }
             }
+        }
+        else
+        {
+            isAlone = true;
         }
     }
 

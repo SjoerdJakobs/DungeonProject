@@ -3,6 +3,7 @@
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class GeneratePlane : MonoBehaviour
 {
+    public Transform testPoint;
 
     public int xSize, ySize;
 
@@ -15,15 +16,36 @@ public class GeneratePlane : MonoBehaviour
     private void Awake()
     {
         GeneratePlanesList.generatedPlanes.Add(gameObject);
-        foreach(GameObject G in GeneratePlanesList.generatedPlanes)
+       /* foreach(GameObject G in GeneratePlanesList.generatedPlanes)
         {
-            //i++;
-            //print(G + " " + i);
-        }
+            i++;
+            print(G + " " + i);
+        }*/
         _corners = new corners();
         xSize = Random.Range(5, 15);
         ySize = Random.Range(5, 15);
         Generate();
+    }
+
+    public bool checkCollisions(Vector3 Point)
+    {
+        return (Point.y >= _corners.downLeftCorner.y && Point.y <= _corners.upperLeftCorner.y && Point.x >= _corners.downLeftCorner.x && Point.x <= _corners.downRightCorner.x);
+    }
+
+    void Update()
+    {
+        if (testPoint != null)
+        {
+            print(checkCollisions(testPoint.position) + " " + gameObject.name);
+        }
+        //print(_corners.downLeftCorner+ "down left");
+        _corners.downLeftCorner = vertices[0] + transform.position;
+        //print(_corners.downRightCorner + "down right");
+        _corners.downRightCorner = vertices[xSize] + transform.position;
+        //print(_corners.upperRightCorner + "upper right");
+        _corners.upperRightCorner = vertices[(xSize + 1) * (ySize + 1) - 1] + transform.position;
+        //print(_corners.upperLeftCorner + "upper left");
+        _corners.upperLeftCorner = vertices[(xSize + 1) * (ySize + 1) - (xSize + 1)] + transform.position;
     }
 
     private void Generate()
@@ -40,10 +62,10 @@ public class GeneratePlane : MonoBehaviour
 
             }
         }
-        _corners.downLeftCorner = vertices[0];
-        _corners.downRightCorner = vertices[xSize];
-        _corners.upperRightCorner = vertices[(xSize + 1) * (ySize + 1) - 1];
-        _corners.upperLeftCorner = vertices[(xSize + 1) * (ySize + 1) - (xSize + 1)];
+        _corners.downLeftCorner = vertices[0] + transform.position;
+        _corners.downRightCorner = vertices[xSize] + transform.position;
+        _corners.upperRightCorner = vertices[(xSize + 1) * (ySize + 1) - 1] + transform.position;
+        _corners.upperLeftCorner = vertices[(xSize + 1) * (ySize + 1) - (xSize + 1)] + transform.position;
         mesh.vertices = vertices;
 
         int[] triangles = new int[xSize * ySize * 6];
@@ -63,18 +85,21 @@ public class GeneratePlane : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawSphere(new Vector3(_corners.downLeftCorner.x,_corners.downLeftCorner.y, 0) + transform.position, 0.4f);
-        Gizmos.DrawSphere(new Vector3(_corners.upperRightCorner.x, _corners.upperRightCorner.y, 0) + transform.position, 0.4f);
-        Gizmos.DrawSphere(new Vector3(_corners.downRightCorner.x, _corners.downRightCorner.y, 0) + transform.position, 0.4f);
-        Gizmos.DrawSphere(new Vector3(_corners.upperLeftCorner.x, _corners.upperLeftCorner.y, 0) + transform.position, 0.4f);
+        Gizmos.DrawSphere(_corners.downLeftCorner, 0.4f);
+        Gizmos.color = Color.black;
+        Gizmos.DrawSphere(_corners.upperRightCorner, 0.4f);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(_corners.downRightCorner, 0.4f);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(_corners.upperLeftCorner, 0.4f);
     }
 
     public struct corners
     {
-        public Vector2 downLeftCorner;
-        public Vector2 downRightCorner;
-        public Vector2 upperLeftCorner;
-        public Vector2 upperRightCorner;
+        public Vector3 downLeftCorner;
+        public Vector3 downRightCorner;
+        public Vector3 upperLeftCorner;
+        public Vector3 upperRightCorner;
     }
     
 }
