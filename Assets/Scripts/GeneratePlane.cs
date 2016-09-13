@@ -24,6 +24,11 @@ public class GeneratePlane : MonoBehaviour
         _corners = new corners();
         xSize = Random.Range(5, 15);
         ySize = Random.Range(5, 15);
+        _corners.downLeftCorner = transform.position;
+        _corners.downRightCorner = new Vector3(xSize, 0, 0) + transform.position;
+        _corners.upperRightCorner = new Vector3(xSize, ySize, 0) + transform.position;
+        _corners.upperLeftCorner = new Vector3(0, ySize, 0) + transform.position;
+        _corners.middle = new Vector3(xSize * 0.5f, ySize * 0.5f, 0) + transform.position;
         Generate();
     }
 
@@ -39,13 +44,14 @@ public class GeneratePlane : MonoBehaviour
             print(checkCollisions(testPoint.position) + " " + gameObject.name);
         }
         //print(_corners.downLeftCorner+ "down left");
-        _corners.downLeftCorner = vertices[0] + transform.position;
+        _corners.downLeftCorner = transform.position;
         //print(_corners.downRightCorner + "down right");
-        _corners.downRightCorner = vertices[xSize] + transform.position;
+        _corners.downRightCorner = new Vector3(xSize, 0, 0) + transform.position;
         //print(_corners.upperRightCorner + "upper right");
-        _corners.upperRightCorner = vertices[(xSize + 1) * (ySize + 1) - 1] + transform.position;
+        _corners.upperRightCorner = new Vector3(xSize, ySize, 0) + transform.position;
         //print(_corners.upperLeftCorner + "upper left");
-        _corners.upperLeftCorner = vertices[(xSize + 1) * (ySize + 1) - (xSize + 1)] + transform.position;
+        _corners.upperLeftCorner = new Vector3(0, ySize, 0) + transform.position;
+        _corners.middle = new Vector3(xSize * 0.5f, ySize * 0.5f, 0) + transform.position;
     }
 
     private void Generate()
@@ -62,10 +68,6 @@ public class GeneratePlane : MonoBehaviour
 
             }
         }
-        _corners.downLeftCorner = vertices[0] + transform.position;
-        _corners.downRightCorner = vertices[xSize] + transform.position;
-        _corners.upperRightCorner = vertices[(xSize + 1) * (ySize + 1) - 1] + transform.position;
-        _corners.upperLeftCorner = vertices[(xSize + 1) * (ySize + 1) - (xSize + 1)] + transform.position;
         mesh.vertices = vertices;
 
         int[] triangles = new int[xSize * ySize * 6];
@@ -92,6 +94,8 @@ public class GeneratePlane : MonoBehaviour
         Gizmos.DrawSphere(_corners.downRightCorner, 0.4f);
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(_corners.upperLeftCorner, 0.4f);
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawSphere(_corners.middle, 0.4f);
     }
 
     public struct corners
@@ -100,6 +104,7 @@ public class GeneratePlane : MonoBehaviour
         public Vector3 downRightCorner;
         public Vector3 upperLeftCorner;
         public Vector3 upperRightCorner;
+        public Vector3 middle;
     }
     
 }
