@@ -14,7 +14,15 @@ public class CreateSmoothTerrainMulti : MonoBehaviour {
         Vector3[] newVertices = plane.vertices;
         for (int v = 0; v < newVertices.Length; v++)
         {
-            newVertices[v].y = (int)(Mathf.PerlinNoise((newVertices[v].x + this.transform.position.x) / detai, (newVertices[v].z + this.transform.position.z) / detai)*heightScale);
+            newVertices[v].y = Mathf.PerlinNoise((newVertices[v].x + this.transform.position.x) / detai, (newVertices[v].z + this.transform.position.z) / detai);
+            if(newVertices[v].y < 0.5f)
+            {
+                newVertices[v].y = 0;
+            }
+            else
+            {
+                newVertices[v].y = 4;
+            }
         }
         plane.vertices = newVertices;
         plane.RecalculateBounds();
