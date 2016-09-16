@@ -1,10 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MapDisplay : MonoBehaviour {
+public class MapDisplay : MonoBehaviour
+{
 
-    public Renderer textureRenderer;
+    public Renderer textureRender;
+    public MeshFilter meshFilter;
+    public MeshRenderer meshRenderer;
+
     public float threshold;
+
+
+    public void DrawTexture(Texture2D texture)
+    {
+        textureRender.sharedMaterial.mainTexture = texture;
+        textureRender.transform.localScale = new Vector3(texture.width, 1, texture.height);
+    }
+
+    public void DrawMesh(MeshData meshData, Texture2D texture)
+    {
+        meshFilter.sharedMesh = meshData.CreateMesh();
+        meshRenderer.sharedMaterial.mainTexture = texture;
+    }
+
+
 
     public void DrawNoiseMap(float[,] noiseMap)
     {
@@ -14,12 +33,12 @@ public class MapDisplay : MonoBehaviour {
         Texture2D texture = new Texture2D(width, height);
 
         Color[] colorMap = new Color[width * height];
-        for(int y = 0; y < height; y++)
+        for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
-                float finalMap = noiseMap[x,y];
-                if(finalMap < threshold)
+                float finalMap = noiseMap[x, y];
+                if (finalMap < threshold)
                 {
                     finalMap = 1;
                 }
@@ -34,7 +53,8 @@ public class MapDisplay : MonoBehaviour {
         texture.SetPixels(colorMap);
         texture.Apply();
 
-        textureRenderer.sharedMaterial.mainTexture = texture;
-        textureRenderer.transform.localScale = new Vector3(width,1,height);
+        textureRender.sharedMaterial.mainTexture = texture;
+        textureRender.transform.localScale = new Vector3(width, 1, height);
     }
+
 }

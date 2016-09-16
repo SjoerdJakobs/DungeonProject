@@ -3,7 +3,7 @@ using System.Collections;
 
 public class DungeonDisplay : MonoBehaviour {
     
-    private CreatePlane createPlaneInfo;
+    /*private CreatePlane createPlaneInfo;
     private GameObject mapGeneratorObject;
     private MapGenerator mapGenerator;
     private Mesh plane;
@@ -22,7 +22,7 @@ public class DungeonDisplay : MonoBehaviour {
             createPlaneInfo.xSize, createPlaneInfo.zSize,
             mapGenerator.noiseScale, mapGenerator.octaves, 
             mapGenerator.persistance, mapGenerator.lacunarity, 
-            new Vector2(transform.position.x/100, transform.position.z/100));
+            new Vector2(transform.position.x, transform.position.z));
 
         int width = noiseMap.GetLength(0);
         int height = noiseMap.GetLength(1);
@@ -62,5 +62,5 @@ public class DungeonDisplay : MonoBehaviour {
         {
             FormMesh();
         }
-    }
+    }*/
 }
