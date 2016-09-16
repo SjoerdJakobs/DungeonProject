@@ -23,9 +23,13 @@ public class MapDisplay : MonoBehaviour
         meshRenderer.sharedMaterial.mainTexture = texture;
     }
 
+    public void DrawDungeonMesh(MeshData meshData, Texture2D texture)
+    {
+        meshFilter.sharedMesh = meshData.CreateMesh();
+        meshRenderer.sharedMaterial.mainTexture = texture;
+    }
 
-
-    public void DrawNoiseMap(float[,] noiseMap)
+    public void DrawNoiseDungeon(float[,] noiseMap)
     {
         int width = noiseMap.GetLength(0);
         int height = noiseMap.GetLength(1);
@@ -56,5 +60,4 @@ public class MapDisplay : MonoBehaviour
         textureRender.sharedMaterial.mainTexture = texture;
         textureRender.transform.localScale = new Vector3(width, 1, height);
     }
-
 }
