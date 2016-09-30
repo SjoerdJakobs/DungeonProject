@@ -1,5 +1,3 @@
-// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-
 Shader "InfiniteTerrain/TriPlanar" {
 	Properties{
 		//_MainTex ("Albedo (RGB)", 2D) = "white" {}
@@ -29,7 +27,7 @@ Shader "InfiniteTerrain/TriPlanar" {
 
 		void vert(inout appdata_full v, out Input o) {
 			UNITY_INITIALIZE_OUTPUT(Input, o);
-			o.pos = mul(unity_ObjectToWorld, v.vertex);
+			o.pos = mul(_Object2World, v.vertex);
 		}
 
 		sampler2D _UpTex;
